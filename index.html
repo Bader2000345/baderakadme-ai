@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أكاديمية الذكاء الاصطناعي | تعلم الهندسة البرمجية</title>
+    <title>أكاديمية الذكاء الاصطناعي | ممرك نحو الاحتراف</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #3b82f6;
             --secondary: #8b5cf6;
             --bg-dark: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-bg: rgba(30, 41, 59, 0.7 );
             --text-main: #f8fafc;
             --accent: #10b981;
+            --warning: #f59e0b;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
@@ -25,7 +26,7 @@
                               radial-gradient(circle at bottom left, rgba(139, 92, 246, 0.1), transparent);
         }
 
-        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
 
         .header-section { text-align: center; margin-bottom: 60px; }
         .header-section h1 { font-size: 3rem; font-weight: 900; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
@@ -33,16 +34,28 @@
 
         .card {
             background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.1);
+            /* Glassmorphism Effect */
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.125);
             padding: 30px;
             border-radius: 24px;
             margin-bottom: 30px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+            /* Scroll Animation */
+            opacity: 0;
+            transform: translateY(20px);
         }
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .card:hover { transform: translateY(-5px); }
 
         h2 { color: var(--primary); margin-bottom: 20px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
         
+        .table-container { overflow-x: auto; }
         .ai-table {
             width: 100%;
             border-collapse: collapse;
@@ -50,206 +63,315 @@
             background: rgba(255, 255, 255, 0.05);
             border-radius: 15px;
             overflow: hidden;
+            min-width: 600px;
         }
-        .ai-table th, .ai-table td {
-            padding: 15px;
-            text-align: right;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
+        .ai-table th, .ai-table td { padding: 15px; text-align: right; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
         .ai-table th { background: var(--primary); color: white; font-weight: 900; }
 
-        .ai-tools-list { list-style: none; margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        @media (max-width: 600px) { .ai-tools-list { grid-template-columns: 1fr; } }
+        .equation-box {
+            background: rgba(59, 130, 246, 0.1);
+            border: 2px dashed var(--primary);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.2rem;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .ai-tools-list { list-style: none; margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
 
         .tool-card {
             background: rgba(255,255,255,0.05);
-            padding: 15px;
+            padding: 20px;
             border-radius: 15px;
             border-right: 5px solid var(--accent);
             transition: 0.3s;
         }
-        .tool-link { color: var(--primary); font-weight: bold; text-decoration: none; font-size: 1.1rem; }
+        .tool-link { color: var(--primary); font-weight: bold; text-decoration: none; font-size: 1.1rem; display: block; margin-bottom: 5px; }
 
-        /* تنسيق خطوات جيت هاب */
-        .github-step {
-            background: rgba(0,0,0,0.2);
+        .warning-box {
+            background: rgba(245, 158, 11, 0.1);
+            border-right: 5px solid var(--warning);
             padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            border: 1px dashed rgba(255,255,255,0.2);
+            border-radius: 10px;
+            margin-top: 15px;
         }
-        .github-step strong { color: var(--accent); display: block; margin-bottom: 5px; }
+
+        .roadmap { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+        .roadmap-item { display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; }
+        .step-num { background: var(--secondary); width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; }
 
         .preview-section { margin: 40px 0; text-align: center; }
-        .browser-mockup {
-            border: 10px solid #334155;
-            border-radius: 20px;
-            overflow: hidden;
-        }
+        .browser-mockup { border: 10px solid #334155; border-radius: 20px; overflow: hidden; margin-bottom: 20px; }
         iframe { width: 100%; height: 500px; border: none; background: white; }
 
         .btn {
             display: inline-block;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
-            padding: 12px 30px;
+            padding: 12px 35px;
             border-radius: 50px;
             text-decoration: none;
             font-weight: 700;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px var(--primary), 0 0 50px var(--secondary);
+        }
+
+        .github-step { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px dashed rgba(255,255,255,0.2); }
+        .github-step strong { color: var(--accent); display: block; margin-bottom: 5px; }
+
+        /* Snippet Library Styles */
+        .snippet-library-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
             margin-top: 20px;
         }
+        .snippet-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+        }
+        .snippet-btn:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px var(--primary);
+        }
+        .snippet-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Mockup Gallery Styles */
+        .mockup-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        .mockup-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .mockup-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .mockup-prompt {
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            font-size: 0.9rem;
+            font-family: monospace;
+            color: #a5b4fc;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* AI Career Paths Styles */
+        .career-list {
+            list-style: none;
+            margin-top: 20px;
+        }
+        .career-list li {
+            background: rgba(16, 185, 129, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-right: 4px solid var(--accent);
+        }
+        .career-list strong {
+            color: var(--accent);
+            font-weight: 900;
+        }
+
+        footer { text-align: center; margin-top: 50px; padding: 20px; opacity: 0.6; border-top: 1px solid rgba(255,255,255,0.1); }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header class="header-section">
-        <h1>مرحباً بكم في دورتنا الاحترافية</h1>
-        <p>كن أنت المهندس.. ودع الذكاء الاصطناعي يكون العامل</p>
+        <h1>أكاديمية الذكاء الاصطناعي</h1>
+        <p>كن أنت المهندس.. ودع الذكاء الاصطناعي يكون العامل المنفذ</p>
     </header>
 
+    <!-- المحتوى القديم يبقى كما هو -->
     <section class="card">
-        <h2>🚀 1. المنهجية الصحيحة للتعامل مع AI</h2>
-        <p>يجب أن تشرح كل ما تريده بالتفصيل؛ مثال: إذا كنت تريد بناء موقع، اشرح الواجهة الرئيسية أولاً، ثم لوحة التحكم. عند التعديل، أعطه قاعدة واضحة ليترك بقية الكود كما هو.</p>
+        <h2>🎯 1. المنهجية الذهنية وهندسة الأوامر (Prompting)</h2>
+        <p>الذكاء الاصطناعي ليس مجرد محرك بحث، بل هو "موظف ذكي" يحتاج لتعليمات دقيقة. لكي تحصل على أفضل كود برمج، استخدم هذه المعادلة:</p>
+        <div class="equation-box">الدور + السياق + المهمة + القيود = أمر مثالي (Prompt)</div>
+        <p><strong>مثال تطبيقي:</strong> "أنت مبرمج خبير (دور)، أريد بناء واجهة لموقع مطعم (سياق)، اكتب لي كود HTML و CSS (مهمة)، بشرط أن يكون التصميم عصرياً وباللون الأسود والذهبي (قيود)."</p>
+        <div class="warning-box"><strong>⚠️ نصيحة أمنية:</strong> لا تضع أبداً كلمات المرور أو مفاتيح الربط (API Keys) داخل المحادثة؛ لأن الموديلات قد تستخدمها في التدريب المستقبلي.</div>
     </section>
 
     <section class="card">
-        <h2>📊 2. أنواع الذكاء الاصطناعي</h2>
-        <table class="ai-table">
-            <thead>
-                <tr>
-                    <th>النوع</th>
-                    <th>الوصف</th>
-                    <th>أمثلة</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>نماذج المحادثة</td>
-                    <td>تنتج النصوص والكود البرمجي وليست مخصصة للصور.</td>
-                    <td>ChatGPT</td>
-                </tr>
-                <tr>
-                    <td>الذكاء الشبيه بالإنسان</td>
-                    <td>نموذج يفكر بعقلية بشرية بالكامل (قيد التطوير).</td>
-                    <td>قيد التوليد</td>
-                </tr>
-                <tr>
-                    <td>الذكاء الفائق</td>
-                    <td>النسخ المدفوعة التي تقدم دقة واحترافية عالية.</td>
-                    <td>النسخ الـ Pro</td>
-                </tr>
-                <tr>
-                    <td>الذكاء المتعلم</td>
-                    <td>يأخذ البيانات ويطور نفسه تلقائياً دون تدخل.</td>
-                    <td>Gemini / Nano Banana</td>
-                </tr>
-            </tbody>
-        </table>
+        <h2>📊 2. تصنيفات الذكاء الاصطناعي (علمياً)</h2>
+        <div class="table-container">
+            <table class="ai-table">
+                <thead><tr><th>المصطلح التقني</th><th>الوصف</th><th>الأمثلة الحالية</th></tr></thead>
+                <tbody>
+                    <tr><td><b>ANI</b> (الذكاء الضيق)</td><td>متخصص في مهام محددة جداً (وهو ما نعيشه اليوم).</td><td>ChatGPT, Gemini, Midjourney</td></tr>
+                    <tr><td><b>AGI</b> (الذكاء العام)</td><td>ذكاء يضاهي العقل البشري في شمولية التفكير.</td><td>قيد التطوير (المستقبل القريب)</td></tr>
+                    <tr><td><b>ASI</b> (الذكاء الفائق)</td><td>نماذج تتفوق على ذكاء البشر في كافة المجالات.</td><td>نظرياً (المستقبل البعيد)</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- قسم مكتبة الأكواد الجاهزة الجديد -->
+    <section class="card">
+        <h2>📚 مكتبة الأكواد الجاهزة (Snippet Library)</h2>
+        <p>وفر وقتك! اضغط على أي زر لنسخ كود جاهز وظيفي تم إنشاؤه بالذكاء الاصطناعي. الصقه مباشرة في مشروعك.</p>
+        <div class="snippet-library-grid">
+            <button class="snippet-btn" onclick="copyCode('nav')">نسخ كود شريط التنقل (Nav Bar)</button>
+            <button class="snippet-btn" onclick="copyCode('footer')">نسخ كود التذييل (Footer)</button>
+            <button class="snippet-btn" onclick="copyCode('slider')">نسخ كود معرض الصور (Image Slider)</button>
+        </div>
+    </section>
+
+    <!-- قسم معرض التصاميم الجديد -->
+    <section class="card">
+        <h2>🎨 معرض التصاميم (Mockup Gallery)</h2>
+        <p>شاهد كيف يمكن تحويل الأفكار إلى تصاميم بصرية. هذه الصور تم توليدها بالكامل عبر Leonardo AI. جرّب استخدام الأوامر بنفسك!</p>
+        <div class="mockup-gallery-grid">
+            <div class="mockup-item">
+                <img src="https://cdn.leonardo.ai/users/25acf724-d1d9-4462-a3ab-4536c352a708/generations/d7a7f6a8-93e2-45a2-974a-6729a9907159/Default_website_ui_design_for_a_travel_agency_dark_theme_gla_1.jpg" alt="تصميم واجهة موقع سياحي">
+                <div class="mockup-prompt">website ui design for a travel agency, dark theme, glassmorphism, vibrant blue and purple, 8k, photorealistic</div>
+            </div>
+            <div class="mockup-item">
+                <img src="https://cdn.leonardo.ai/users/25acf724-d1d9-4462-a3ab-4536c352a708/generations/511b0337-4712-42b5-80c1-218f2889073a/Default_UI_design_for_a_futuristic_e-commerce_site_selling_g_3.jpg" alt="تصميم واجهة متجر إلكتروني">
+                <div class="mockup-prompt">UI design for a futuristic e-commerce site selling gadgets, neon accents, sleek, minimalist, product focus, dark mode</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم وظائف المستقبل الجديد -->
+    <section class="card">
+        <h2>💼 وظائف المستقبل (AI Career Paths )</h2>
+        <p>تعلم هذه المهارات ليس مجرد هواية، بل هو استثمار في مستقبلك المهني. إليك بعض المسارات التي يمكنك أن تسلكها لكسب المال:</p>
+        <ul class="career-list">
+            <li><strong>مدخل بيانات مدعوم بالـ AI:</strong> متخصص في استخدام أدوات الذكاء الاصطناعي لتنقية وتصنيف وإدخال كميات هائلة من البيانات بسرعة ودقة تفوق العمل اليدوي.</li>
+            <li><strong>مطور واجهات سريع (Rapid Prototyping):</strong> يستخدم أدوات مثل v0.dev لتصميم نماذج أولية للمواقع والتطبيقات في دقائق، مما يسرّع من عملية التطوير وجذب العملاء.</li>
+            <li><strong>مهندس أوامر (Prompt Engineer):</strong> خبير في "التحدث" مع الذكاء الاصطناعي وصياغة الأوامر المثالية للحصول على أفضل النتائج الممكنة في مجالات مثل البرمجة، التصميم، والكتابة.</li>
+        </ul>
     </section>
 
     <section class="card">
-        <h2>🌍 3. اللغة والبيانات</h2>
-        <p>يفضل استخدام اللغة الإنجليزية لأن الذكاء الاصطناعي تدرب على Data عالمية بهذه اللغة.</p>
+        <h2>🗺️ 3. خارطة طريق المبرمج الذكي (Roadmap)</h2>
+        <div class="roadmap">
+            <div class="roadmap-item"><div class="step-num">1</div><p>تعلم أساسيات الويب (HTML / CSS).</p></div>
+            <div class="roadmap-item"><div class="step-num">2</div><p>استخدم <b>v0.dev</b> لتوليد الهيكل البصري الأولي.</p></div>
+            <div class="roadmap-item"><div class="step-num">3</div><p>استعن بـ <b>Claude</b> أو <b>ChatGPT</b> لكتابة المنطق وتصحيح الأخطاء.</p></div>
+            <div class="roadmap-item"><div class="step-num">4</div><p>انشر عملك عبر <b>GitHub Pages</b> كما سنشرح بالأسفل.</p></div>
+        </div>
     </section>
 
     <div class="preview-section">
-        <h2 style="color: white;">📍 نموذج عملي (موقع برو كاش)</h2>
-        <p style="color: #10b981; font-weight: bold;">💡 نصيحة جربوه مفيد جداً!</p>
+        <h2 style="color: white; margin-bottom: 10px;">📍 نموذج عملي (موقع برو كاش)</h2>
+        <p style="color: var(--accent); font-weight: bold; margin-bottom: 20px;">💡 هذا المثال تم بناؤه بالكامل باستخدام تقنيات AI!</p>
         <div class="browser-mockup">
-            <link src="https://bader2000345.github.io/bader-pro-cash2/"></iframe>
+            <iframe src="https://bader2000345.github.io/bader-pro-cash2/"></iframe>
         </div>
-        <a href="https://bader2000345.github.io/bader-pro-cash2/" 
-   target="_blank" 
-   rel="noopener noreferrer"
-   class="btn">
-   زيارة الموقع بكامل الشاشة
-</a>
-
+        <a href="https://bader2000345.github.io/bader-pro-cash2/" target="_blank" class="btn">زيارة الموقع بكامل الشاشة</a>
     </div>
 
     <section class="card">
-        <h2>🔗 4. أفضل مواقع الذكاء الاصطناعي المجانية</h2>
+        <h2>🔗 4. ترسانة أدواتك (الأفضل عالمياً )</h2>
         <div class="ai-tools-list">
-            <div class="tool-card">
-                <a href="https://chatgpt.com" target="_blank" class="tool-link">ChatGPT</a>
-                <p>ملك المحادثات والبرمجة.</p>
-            </div>
-            
-            <div class="tool-card">
-                <a href="https://gemini.google.com" target="_blank" class="tool-link">Google Gemini</a>
-                <p>مساعد جوجل الذكي والشامل.</p>
-            </div>
-
-            <div class="tool-card">
-                <a href="https://manus.ai" target="_blank" class="tool-link">Manus AI</a>
-                <p>مساعد "الوكيل العام" لتنفيذ مهام معقدة.</p>
-            </div>
-
-            <div class="tool-card">
-                <a href="https://claude.ai" target="_blank" class="tool-link">Claude AI</a>
-                <p>يتميز بدقة عالية جداً في كتابة الأكواد.</p>
-            </div>
-
-            <div class="tool-card">
-                <a href="https://v0.dev" target="_blank" class="tool-link">v0.dev</a>
-                <p>بناء واجهات المواقع بالوصف النصي.</p>
-            </div>
-
-            <div class="tool-card">
-                <a href="https://perplexity.ai" target="_blank" class="tool-link">Perplexity</a>
-                <p>محرك بحث ذكي يعطيك إجابات مع المصادر.</p>
-            </div>
-
-            <div class="tool-card">
-                <a href="https://leonardo.ai" target="_blank" class="tool-link">Leonardo AI</a>
-                <p>توليد صور فنية مذهلة مجاناً.</p>
-            </div>
-
-            <div class="tool-card special-tool">
-                <a href="#" target="_blank" class="tool-link">موقع ثورة (Thawra AI) 🇸🇾</a>
-                <p>مشروع سوري يدمج خدمات الـ AI باللغة العربية.</p>
-            </div>
+            <div class="tool-card"><a href="https://claude.ai" target="_blank" class="tool-link">Claude AI</a><p>الأفضل والأدق حالياً في كتابة الأكواد البرمجية النظيفة.</p></div>
+            <div class="tool-card"><a href="https://gemini.google.com" target="_blank" class="tool-link">Google Gemini</a><p>يتميز بقدرته على الوصول للمعلومات الحديثة والبحث الصوتي.</p></div>
+            <div class="tool-card"><a href="https://v0.dev" target="_blank" class="tool-link">v0.dev</a><p>اكتب وصفاً واحصل على واجهة موقع جاهزة في ثوانٍ.</p></div>
+            <div class="tool-card"><a href="https://elevenlabs.io" target="_blank" class="tool-link">ElevenLabs</a><p>لتحويل النصوص إلى أصوات بشرية واقعية جداً لمشاريعك.</p></div>
+            <div class="tool-card"><a href="https://leonardo.ai" target="_blank" class="tool-link">Leonardo AI</a><p>لتوليد صور فنية احترافية لواجهات موقعك مجاناً.</p></div>
+            <div class="tool-card"><a href="https://cursor.com" target="_blank" class="tool-link">Cursor Editor</a><p>محرر الأكواد الثوري الذي يكتب عنك الكود بمجرد الطلب.</p></div>
         </div>
-    </section>
-
-</div>
     </section>
 
     <section class="card">
-        <h2>🌐 5. كيف تنشر موقعك ليراه الجميع؟</h2>
-        <p style="margin-bottom: 20px;">بعد أن انتهيت من عمل فكرتك كموقع وتريد نشره لتفيد عائلتك أو أصدقائك، فأنت الآن بحاجة لرابط عام لأن الموقع حالياً لا يعمل إلا على جهازك فقط. إليك خطوات النشر المجاني عبر <strong>GitHub</strong>:</p>
-        
-        <div class="github-step">
-            <strong>1. إنشاء مستودع جديد (Repository):</strong>
-            <p>ادخل إلى حسابك في <a href="https://github.com" target="_blank" style="color: var(--primary);">GitHub</a>، ثم من بروفايلك اضغط على علامة (+) واختر <b>New Repository</b>. أعطه اسماً (مثلاً: MySite).</p>
-        </div>
-
-        <div class="github-step">
-            <strong>2. رفع الملفات:</strong>
-            <p>اضغط على <b>uploading an existing file</b> ثم قم بسحب وإفلات ملفات موقعك (مثل index.html) داخل الموقع واضغط <b>Commit changes</b>.</p>
-        </div>
-
-        <div class="github-step">
-            <strong>3. تفعيل الرابط:</strong>
-            <p>اذهب إلى إعدادات المستودع <b>Settings</b>، ثم من القائمة الجانبية اختر <b>Pages</b>.</p>
-        </div>
-
-        <div class="github-step">
-            <strong>4. اختيار الفرع (Branch):</strong>
-            <p>تحت قسم Build and deployment، اختر <b>Main</b> بدلاً من None ثم اضغط <b>Save</b>.</p>
-        </div>
-
-        <div class="github-step" style="border-color: var(--accent);">
-            <strong>✅ مبروك!</strong>
-            <p>انتظر دقيقتين وستظهر لك رسالة في الأعلى تحتوي على رابط موقعك الجديد. يمكنك الآن إرساله لأي شخص في العالم!</p>
-        </div>
+        <h2>🌐 5. كيف تنشر موقعك ليراه العالم؟</h2>
+        <p style="margin-bottom: 20px;">بعد الانتهاء من الإبداع، إليك خطوات تحويل ملفك من جهازك الشخصي إلى رابط عالمي (URL ) مجاناً عبر <strong>GitHub</strong>:</p>
+        <div class="github-step"><strong>1. إنشاء مستودع (Repository):</strong><p>سجل في <a href="https://github.com" target="_blank" style="color: var(--primary );">GitHub</a>، اضغط على (+) ثم <b>New Repository</b>. سمّهِ باسم موقعك.</p></div>
+        <div class="github-step"><strong>2. رفع الملف الأساسي:</strong><p>اختر <b>uploading an existing file</b>. ارفع ملفك (يجب أن يكون اسمه <b>index.html</b> ليعمل الرابط) ثم اضغط <b>Commit changes</b>.</p></div>
+        <div class="github-step"><strong>3. تفعيل الخدمة:</strong><p>من إعدادات المستودع <b>Settings</b> > اختر <b>Pages</b> من القائمة الجانبية.</p></div>
+        <div class="github-step"><strong>4. إطلاق الرابط:</strong><p>عند Build and deployment، اختر فرع <b>Main</b> واضغط <b>Save</b>.</p></div>
+        <div class="github-step" style="border: 2px solid var(--accent); background: rgba(16, 185, 129, 0.1);"><strong>✅ تم النشر بنجاح!</strong><p>خلال دقائق، سيظهر لك رابط في أعلى الصفحة. شاركه الآن مع العالم!</p></div>
     </section>
 
-    <footer style="text-align: center; margin-top: 50px; opacity: 0.5; font-size: 0.8rem;">
-        جميع الحقوق محفوظة © 2026 | تطوير الأكاديمية
+    <footer>
+        جميع الحقوق محفوظة © 2026 | تطوير الأكاديمية الذكية
     </footer>
 </div>
+
+<script>
+// Scroll Animation Logic
+document.addEventListener('DOMContentLoaded', () => {
+    const cards = document.querySelectorAll('.card');
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    cards.forEach(card => {
+        observer.observe(card);
+    });
+});
+
+// Snippet Copy Logic
+function copyCode(type) {
+    const snippets = {
+        nav: `<nav style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; background-color: #1e293b; color: white;">
+  <div class="logo" style="font-weight: bold; font-size: 1.5rem;">MyLogo</div>
+  <ul style="list-style: none; display: flex; gap: 1.5rem;">
+    <li><a href="#" style="color: white; text-decoration: none;">Home</a></li>
+    <li><a href="#" style="color: white; text-decoration: none;">About</a></li>
+    <li><a href="#" style="color: white; text-decoration: none;">Contact</a></li>
+  </ul>
+</nav>`,
+        footer: `<footer style="text-align: center; padding: 2rem; background-color: #1e293b; color: #94a3b8;">
+  <p>&copy; 2026 Your Company. All rights reserved.</p>
+  <div style="margin-top: 1rem; display: flex; justify-content: center; gap: 1rem;">
+    <a href="#" style="color: #94a3b8;">Facebook</a>
+    <a href="#" style="color: #94a3b8;">Twitter</a>
+    <a href="#" style="color: #94a3b8;">LinkedIn</a>
+  </div>
+</footer>`,
+        slider: `<div class="slider" style="max-width: 800px; margin: 2rem auto; overflow: hidden; position: relative;">
+  <div class="slides" style="display: flex; transition: transform 0.5s ease-in-out;">
+    <img src="https://via.placeholder.com/800x400/3b82f6/ffffff?text=Slide+1" style="width: 100%; flex-shrink: 0;">
+    <img src="https://via.placeholder.com/800x400/8b5cf6/ffffff?text=Slide+2" style="width: 100%; flex-shrink: 0;">
+    <img src="https://via.placeholder.com/800x400/10b981/ffffff?text=Slide+3" style="width: 100%; flex-shrink: 0;">
+  </div>
+  <p style="text-align:center; color: #ccc; font-size: 0.8rem;">Note: This is a basic visual structure. Full slider functionality requires JavaScript.</p>
+</div>`
+    };
+
+    const codeToCopy = snippets[type];
+    navigator.clipboard.writeText(codeToCopy ).then(() => {
+        alert('تم نسخ الكود بنجاح!');
+    }).catch(err => {
+        console.error('Failed to copy: ', err);
+    });
+}
+</script>
 
 </body>
 </html>
